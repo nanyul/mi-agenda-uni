@@ -1,6 +1,6 @@
 {
   "name": "mi-agenda-uni",
-  "homepage": "[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)",
+  "homepage": "https://nanyul.github.io/mi-agenda-uni",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -285,7 +285,7 @@ function App() {
           <header className="flex justify-between items-center mb-10 glass-panel p-6 rounded-[2rem] sticky top-0 z-20">
             <div>
               <h2 className="text-3xl font-extrabold text-[#5A5A89] drop-shadow-sm">
-                {vistaActiva === 'dashboard' ? 'Bienvenida de nuevo 👋' : materias.find(m => m.id === vistaActiva)?.nombre}
+                {vistaActiva === 'dashboard' ? 'Bienvenido de nuevo ^_~' : materias.find(m => m.id === vistaActiva)?.nombre}
               </h2>
             </div>
             <div className="flex gap-4">

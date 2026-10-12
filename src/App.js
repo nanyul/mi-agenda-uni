@@ -37,6 +37,14 @@ const cssPersonalizado = `
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(140, 140, 184, 0.4); border-radius: 10px; }
 .glass-panel { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px 0 rgba(140, 140, 184, 0.1); }
+@media (max-width: 639px) {
+  .rbc-toolbar { flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .rbc-toolbar-label { width: 100%; order: -1; margin-bottom: 4px; }
+  .rbc-toolbar button { margin-right: 0; }
+  .rbc-header { padding: 7px 2px; font-size: 0.7rem; }
+  .rbc-date-cell { padding-right: 3px; font-size: 0.7rem; }
+  .rbc-event { padding: 2px 3px !important; font-size: 0.65rem; }
+}
 `;
 
 function App() {
@@ -71,6 +79,7 @@ function App() {
 
   const [fechaActual, setFechaActual] = useState(new Date());
   const [vistaCalendario, setVistaCalendario] = useState('month');
+  const [sidebarAbierto, setSidebarAbierto] = useState(false);
   
   const [modalAbierto, setModalAbierto] = useState(false);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null); 
@@ -252,7 +261,15 @@ function App() {
         />
 
         {/* SIDEBAR */}
-        <aside className="w-64 glass-panel flex-col justify-between hidden lg:flex border-r border-white z-10 pointer-events-auto">
+        {sidebarAbierto && (
+          <button
+            type="button"
+            aria-label="Cerrar menú"
+            onClick={() => setSidebarAbierto(false)}
+            className="fixed inset-0 bg-[#5A5A89] bg-opacity-30 z-30 lg:hidden"
+          />
+        )}
+        <aside className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] glass-panel flex flex-col justify-between border-r border-white z-40 pointer-events-auto transition-transform duration-300 lg:static lg:w-64 lg:translate-x-0 ${sidebarAbierto ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="p-6 overflow-y-auto custom-scrollbar">
             <div className="flex items-center gap-3 mb-10 px-2 mt-4">
               <div className="w-10 h-10 bg-gradient-to-br from-[#8C8CB8] to-[#B8AEE3] rounded-xl shadow-md flex items-center justify-center text-white font-extrabold text-lg">P</div>
@@ -260,7 +277,7 @@ function App() {
             </div>
             
             <nav className="space-y-3 font-bold text-[#8C8CB8]">
-              <button onClick={() => setVistaActiva('dashboard')} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${vistaActiva === 'dashboard' ? 'bg-white bg-opacity-70 shadow-sm text-[#5A5A89]' : 'hover:bg-white hover:bg-opacity-40 text-[#8C8CB8]'}`}>
+              <button onClick={() => { setVistaActiva('dashboard'); setSidebarAbierto(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${vistaActiva === 'dashboard' ? 'bg-white bg-opacity-70 shadow-sm text-[#5A5A89]' : 'hover:bg-white hover:bg-opacity-40 text-[#8C8CB8]'}`}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill={vistaActiva === 'dashboard' ? '#5A5A89' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Dashboard
               </button>
@@ -270,7 +287,7 @@ function App() {
               </div>
               
               {materias.map(m => (
-                <button key={m.id} onClick={() => setVistaActiva(m.id)} className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all ${vistaActiva === m.id ? 'bg-white bg-opacity-70 shadow-sm text-[#5A5A89] scale-105' : 'hover:bg-white hover:bg-opacity-40 text-[#8C8CB8]'}`}>
+                <button key={m.id} onClick={() => { setVistaActiva(m.id); setSidebarAbierto(false); }} className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all ${vistaActiva === m.id ? 'bg-white bg-opacity-70 shadow-sm text-[#5A5A89] scale-105' : 'hover:bg-white hover:bg-opacity-40 text-[#8C8CB8]'}`}>
                   <span className="w-4 h-4 rounded-lg shadow-inner border border-black border-opacity-5" style={{ backgroundColor: m.color }}></span>
                   <span className="truncate text-left text-sm font-semibold">{m.nombre}</span>
                 </button>
@@ -280,18 +297,26 @@ function App() {
         </aside>
 
         {/* CONTENIDO PRINCIPAL */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar relative z-10 pointer-events-auto">
+        <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-6 md:p-10 custom-scrollbar relative z-10 pointer-events-auto">
           
-          <header className="flex justify-between items-center mb-10 glass-panel p-6 rounded-[2rem] sticky top-0 z-20">
-            <div>
-              <h2 className="text-3xl font-extrabold text-[#5A5A89] drop-shadow-sm">
+          <header className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-10 glass-panel p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] sticky top-0 z-20">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#5A5A89] drop-shadow-sm">
                 {vistaActiva === 'dashboard' ? 'Bienvenido de nuevo ^_~' : materias.find(m => m.id === vistaActiva)?.nombre}
               </h2>
+              <button
+                type="button"
+                aria-label="Abrir menú"
+                onClick={() => setSidebarAbierto(true)}
+                className="shrink-0 p-3 rounded-xl bg-white bg-opacity-70 shadow-sm text-[#5A5A89] lg:hidden"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+              </button>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full sm:w-auto">
               <div className="relative">
                 <svg className="absolute left-4 top-3 text-[#8C8CB8] w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Buscar tareas..." className="bg-white bg-opacity-70 border-2 border-transparent pl-12 pr-5 py-3 rounded-2xl outline-none text-sm w-72 focus:bg-white focus:border-[#E8E8FA] text-[#5A5A89] shadow-sm transition-all font-semibold" value={textoBusqueda} onChange={(e) => setTextoBusqueda(e.target.value)} />
+                <input type="text" placeholder="Buscar tareas..." className="bg-white bg-opacity-70 border-2 border-transparent pl-12 pr-5 py-3 rounded-2xl outline-none text-sm w-full sm:w-72 focus:bg-white focus:border-[#E8E8FA] text-[#5A5A89] shadow-sm transition-all font-semibold" value={textoBusqueda} onChange={(e) => setTextoBusqueda(e.target.value)} />
               </div>
             </div>
           </header>
@@ -301,8 +326,8 @@ function App() {
             {vistaActiva === 'dashboard' && (
               <motion.div key="dashboard" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
                 
-                <div className="glass-panel p-8 rounded-[2rem] mb-10">
-                  <div className="h-[450px]">
+                <div className="glass-panel p-3 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] mb-6 sm:mb-10 overflow-hidden">
+                  <div className="h-[390px] sm:h-[450px] min-w-0">
                     <Calendar
                       localizer={localizer} events={eventos} startAccessor="start" endAccessor="end" selectable
                       onSelectSlot={handleSelectSlot} onSelectEvent={handleSelectEvent}

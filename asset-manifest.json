@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/static/css/main.85cb134b.css",
-    "main.js": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/static/js/main.9d4595f0.js",
-    "static/js/453.8badb746.chunk.js": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/static/js/453.8badb746.chunk.js",
-    "index.html": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/index.html",
-    "main.85cb134b.css.map": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/static/css/main.85cb134b.css.map",
-    "main.9d4595f0.js.map": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/static/js/main.9d4595f0.js.map",
-    "453.8badb746.chunk.js.map": "/[https://nanyul.github.io/mi-agenda-uni](https://nanyul.github.io/mi-agenda-uni)/static/js/453.8badb746.chunk.js.map"
+    "main.css": "/mi-agenda-uni/static/css/main.85cb134b.css",
+    "main.js": "/mi-agenda-uni/static/js/main.cfde63e3.js",
+    "static/js/453.8badb746.chunk.js": "/mi-agenda-uni/static/js/453.8badb746.chunk.js",
+    "index.html": "/mi-agenda-uni/index.html",
+    "main.85cb134b.css.map": "/mi-agenda-uni/static/css/main.85cb134b.css.map",
+    "main.cfde63e3.js.map": "/mi-agenda-uni/static/js/main.cfde63e3.js.map",
+    "453.8badb746.chunk.js.map": "/mi-agenda-uni/static/js/453.8badb746.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.85cb134b.css",
-    "static/js/main.9d4595f0.js"
+    "static/js/main.cfde63e3.js"
   ]
 }

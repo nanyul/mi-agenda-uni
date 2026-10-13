@@ -37,13 +37,18 @@ const cssPersonalizado = `
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(140, 140, 184, 0.4); border-radius: 10px; }
 .glass-panel { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px 0 rgba(140, 140, 184, 0.1); }
+.rbc-calendar { min-width: 0; }
+.rbc-toolbar { gap: 6px; }
 @media (max-width: 639px) {
-  .rbc-toolbar { flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .rbc-toolbar { flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
   .rbc-toolbar-label { width: 100%; order: -1; margin-bottom: 4px; }
   .rbc-toolbar button { margin-right: 0; }
   .rbc-header { padding: 7px 2px; font-size: 0.7rem; }
   .rbc-date-cell { padding-right: 3px; font-size: 0.7rem; }
   .rbc-event { padding: 2px 3px !important; font-size: 0.65rem; }
+  .rbc-month-view { min-height: 330px; }
+  .rbc-time-view { overflow-x: auto; }
+  .rbc-time-content, .rbc-time-header-content { min-width: 560px; }
 }
 `;
 
@@ -296,30 +301,63 @@ function App() {
           </div>
         </aside>
 
+        {/* NAVEGACIÓN INFERIOR PARA MÓVIL */}
+        <nav aria-label="Secciones principales" className="fixed bottom-0 left-0 right-0 z-30 lg:hidden glass-panel border-t border-white px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          <div className="flex gap-2 overflow-x-auto custom-scrollbar">
+            <button
+              type="button"
+              onClick={() => setVistaActiva('dashboard')}
+              className={`min-w-[88px] flex-1 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-xs font-extrabold transition-colors ${vistaActiva === 'dashboard' ? 'bg-white bg-opacity-80 text-[#5A5A89] shadow-sm' : 'text-[#8C8CB8]'}`}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill={vistaActiva === 'dashboard' ? '#5A5A89' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              Inicio
+            </button>
+            {materias.map(materia => (
+              <button
+                type="button"
+                key={`mobile-${materia.id}`}
+                onClick={() => setVistaActiva(materia.id)}
+                title={materia.nombre}
+                className={`min-w-[100px] max-w-[140px] flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-extrabold transition-colors ${vistaActiva === materia.id ? 'bg-white bg-opacity-80 text-[#5A5A89] shadow-sm' : 'text-[#8C8CB8]'}`}
+              >
+                <span className="w-3 h-3 shrink-0 rounded-full border border-black border-opacity-5" style={{ backgroundColor: materia.color }}></span>
+                <span className="truncate">{materia.nombre}</span>
+              </button>
+            ))}
+          </div>
+        </nav>
+
         {/* CONTENIDO PRINCIPAL */}
-        <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-6 md:p-10 custom-scrollbar relative z-10 pointer-events-auto">
+        <main className="flex-1 min-w-0 overflow-y-auto p-3 pb-28 sm:p-6 sm:pb-6 md:p-10 custom-scrollbar relative z-10 pointer-events-auto">
           
-          <header className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-10 glass-panel p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] sticky top-0 z-20">
-            <div className="flex items-center justify-between gap-3">
+          <header className="flex items-center justify-between gap-3 mb-4 sm:mb-6 glass-panel p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] sticky top-0 z-20">
+            <div className="min-w-0">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#5A5A89] drop-shadow-sm">
                 {vistaActiva === 'dashboard' ? 'Bienvenido de nuevo ^_~' : materias.find(m => m.id === vistaActiva)?.nombre}
               </h2>
-              <button
-                type="button"
-                aria-label="Abrir menú"
-                onClick={() => setSidebarAbierto(true)}
-                className="shrink-0 p-3 rounded-xl bg-white bg-opacity-70 shadow-sm text-[#5A5A89] lg:hidden"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
-              </button>
             </div>
-            <div className="flex gap-4 w-full sm:w-auto">
-              <div className="relative">
-                <svg className="absolute left-4 top-3 text-[#8C8CB8] w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Buscar tareas..." className="bg-white bg-opacity-70 border-2 border-transparent pl-12 pr-5 py-3 rounded-2xl outline-none text-sm w-full sm:w-72 focus:bg-white focus:border-[#E8E8FA] text-[#5A5A89] shadow-sm transition-all font-semibold" value={textoBusqueda} onChange={(e) => setTextoBusqueda(e.target.value)} />
-              </div>
-            </div>
+            <button
+              type="button"
+              aria-label="Abrir menú"
+              onClick={() => setSidebarAbierto(true)}
+              className="shrink-0 p-3 rounded-xl bg-white bg-opacity-70 shadow-sm text-[#5A5A89] lg:hidden"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+            </button>
           </header>
+
+          <div className="mb-6 sm:mb-10 flex items-center gap-3">
+            <label htmlFor="busqueda-tareas" className="sr-only">Filtrar tareas</label>
+            <div className="relative w-full sm:max-w-sm">
+              <svg className="absolute left-4 top-3 text-[#8C8CB8] w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input id="busqueda-tareas" type="search" placeholder="Filtrar tareas..." className="bg-white bg-opacity-80 border-2 border-white border-opacity-60 pl-12 pr-5 py-3 rounded-2xl outline-none text-sm w-full focus:bg-white focus:border-[#E8E8FA] text-[#5A5A89] shadow-sm transition-all font-semibold" value={textoBusqueda} onChange={(e) => setTextoBusqueda(e.target.value)} />
+            </div>
+            {textoBusqueda && (
+              <button type="button" onClick={() => setTextoBusqueda('')} className="shrink-0 px-4 py-3 rounded-2xl bg-white bg-opacity-70 text-xs font-extrabold text-[#8C8CB8] shadow-sm hover:bg-opacity-100 transition-colors">
+                Limpiar
+              </button>
+            )}
+          </div>
 
           <AnimatePresence mode="wait">
             {/* DASHBOARD GENERAL */}
